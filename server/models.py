@@ -10,4 +10,13 @@ metadata = MetaData(naming_convention={
 
 db = SQLAlchemy(metadata=metadata)
 
-# write your models here!
+class Raccoon(db.Model, SerializerMixin):
+    pass
+
+
+class Visit(db.Model, SerializerMixin):
+    pass
+
+
+class Trashcan(db.Model, SerializerMixin):
+    pass

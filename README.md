@@ -1,6 +1,6 @@
-# Flask Practice - Car Dealership
+# Flask Practice - Raccoons
 
-This application is being built to track cars sold by car dealerships.
+This application is being built by a wildlife organization to track raccoon visits to residential trashcans.
 
 ## Getting Started
 
@@ -12,160 +12,152 @@ There are no tests so be sure to use the `flask shell` and Postman to be certain
 
 You have three models:
 
-### Owner
+### Raccoon
 
-- `first_name` (string): Cannot be null
-- `last_name` (string): Cannot be null
+- `name` (string): Cannot be null, must be unique
+- `age` (integer): Cannot be null, must be a number greater than 0
 
-### Dealership
+### Trashcan
 
-- `name` (string): Cannot be null
 - `address` (string): Cannot be null
 
-### Car
+### Visit
 
-- `make` (string): Cannot be null
-- `model` (string): Cannot be null
-- `date_sold` (datetime): Cannot be null
+- `date` (string): Cannot be null
 
 ## Relationships
 
 This is a many-to-many relationship.
 
-- An owner has many cars and a car belongs to an owner.
+- An Raccoon has many Visits and a Visit belongs to an Raccoon.
 
-- A dealership has many cars and a car belongs to a dealership.
+- A Trashcan has many Visits and a Visit belongs to a Trashcan.
 
-- A dealership has many owners and an owner has many dealerships through cars.
+- A Trashcan has many Raccoons and a Raccoon has many Trashcans through Visits.
 
-`Owner --< Car >-- Dealership`
+`Raccoon --< Visit >-- Trashcan`
 
 The foreign keys aren't specified so you'll have to determine where they go.
 
 ## Seeding
 
-You can either use the `seed.py` to create your seeds or you can seed manually with `flask shell`.
+You can either use the `seed.py` to create your seeds or you can seed manually with `flask shell`. The `seed.py` file has already been populated and should work once your models are prepared.
 
 ## Routes
 
 Build out these routes:
 
 
-### Owner
+### Raccoon
 
-#### `GET /owners`
+#### `GET /Raccoons`
 
-Returns a list of all owners formatted like so:
+Returns a list of all Raccoons formatted like so:
 
 ```json
 [
     {
         "id": 1,
-        "first_name": "Mohammad",
-        "last_name": "Hossain"
+        "name": "Bob",
+        "age": 10
     },
     {
         "id": 2,
-        "first_name": "Alina",
-        "last_name": "Pisarenko"
+        "name": "Jimbo",
+        "age": 7
     }
+    
 ]
 ```
 
-#### `GET /owners/:id`
+#### `GET /raccoons/:id`
 
-Returns an owner with the matching id. If there is no owner, returns a message that the owner could not be found along with a 404.
+Returns an Raccoon with the matching id. If there is no Raccoon, returns a message that the Raccoon could not be found along with a 404.
 
-Format your owner object like so:
+Format your Raccoon object like so:
 
 ```json
     {
         "id": 1,
-        "first_name": "Mohammad",
-        "last_name": "Hossain",
-        "cars": [
+        "name": "Bob",
+        "age": 10,
+        "visits": [
             {
                 "id": 1,
-                "make": "Ford",
-                "model": "Taurus",
-                "date_sold": "2002-08-18 00:00:00"
+                "trashcan_id": 1,
+                "raccoon_id": 1,
+                "date": "2023 8 18"
             },
             {
                 "id": 2,
-                "make": "Chevrolet",
-                "model": "Corvette",
-                "date_sold": "2001-12-31 00:00:00"
+                "trashcan_id": 2,
+                "raccoon_id": 1,
+                "date": "2022 12 5"
             }
         ]
     }
+    
 ```
 
-#### `DELETE /owners/:id`
+#### `DELETE /raccoons/:id`
 
-Deletes the owner and all associated cars from the database. Returns 204 if the owner was successfully deleted or 404 and an appropriate message if that owner could not be found.
+Deletes the Raccoon and all associated Visits from the database. Returns 204 if the Raccoon was successfully deleted or 404 and an appropriate message if that Raccoon could not be found.
 
 
-### Dealership
+### Trashcan
 
-#### `GET /dealerships`
+#### `GET /trashcans`
 
-Returns a list of all dealerships.
+Returns a list of all Trashcans.
 
 ```json
 [
     {
         "id": 1,
-        "name": "Crazy Bob's Car Rodeo",
         "address": "123 Woodland Dr"
     },
     {
         "id": 2,
-        "name": "King Auto's Castle",
-        "address": "456 Roundtable Ln"
+        "address": "456 Grey Mtn Rd"
     }
 ]
 ```
 
 
-#### `GET /dealerships/:id`
+#### `GET /trashcans/:id`
 
-Returns a dealership with the matching id. If there is no dealership, returns a message that the dealership could not be found along with a 404.
+Returns a Trashcan with the matching id. If there is no Trashcan, returns a message that the Trashcan could not be found along with a 404.
 
 ```json
 {
     "id": 2,
-    "name": "King Auto's Castle",
-    "address": "456 Roundtable Ln"
+    "address": "456 Grey Mtn Rd"
 }
 ```
 
 
-### Car
+### Visit
 
-#### `POST /cars`
+#### `POST /visits`
 
-Creates a new car. The car must belong to a owner and a dealership. Return the new car details like so:
+Creates a new Visit. The Visit must belong to a Raccoon and a Trashcan. Return the new Visit details like so:
 
 ```json
 {
     "id": 3,
-    "make": "Ford",
-    "model": "Pinto",
-    "owner": {
+    "date": "2021 10 31",
+    "raccoon": {
       "id": 2,
-      "first_name": "Alina",
-      "last_name": "Pisarenko"
+      "name": "Jimbo",
+      "age": 7
     },
-    "dealership": {
+    "trashcan": {
         "id": 1,
-        "name": "Crazy Bob's Car Rodeo",
         "address": "123 Woodland Dr"
     }
 }
 ```
 
-#### `DELETE /cars/:id`
+#### `DELETE /visits/:id`
 
-Deletes the car from the database. Returns 204 if the car was successfully deleted or 404 and an appropriate message if that car could not be found.
-
-*Please note the json that gets serialized may be a different order for any given response, don't focus on the order so much as making sure everything gets returned correctly...*
+Deletes the Visit from the database. Returns 204 if the Visit was successfully deleted or 404 and an appropriate message if that Visit could not be found.
