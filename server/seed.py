@@ -4,6 +4,7 @@ from app import app
 from models import db, Raccoon, Trashcan, Visit
 from faker import Faker
 import random
+from random import randint
 
 faker = Faker()
 
@@ -22,7 +23,7 @@ if __name__ == '__main__':
         raccoons_list = []
 
         for _ in range(10):
-            r = Raccoon( name=faker.name(), age=random.randint(20) )
+            r = Raccoon( name=faker.first_name(), age=random.randint(1,20) )
             raccoons_list.append(r)
 
         db.session.add_all(raccoons_list)
@@ -47,7 +48,7 @@ if __name__ == '__main__':
             v = Visit( 
                 raccoon=random.choice(raccoons_list),
                 trashcan=random.choice(trashcans_list),
-                date_of_visit=str(faker.date_between(start_date='-10y', end_date='today'))
+                date=str(faker.date_between(start_date='-10y', end_date='today'))
             )
             visits_list.append(v)
 
